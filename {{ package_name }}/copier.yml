@@ -1,0 +1,12 @@
+_min_copier_version: v6.0.0b0
+package_title_input:
+  type: str
+package_title:
+  type: str
+  default: "{{ package_title_input.replace('-', ' ').replace('_', '-').title() }}"
+package_name: "{{ package_title.replace(' ', '-').replace('_', '-').lower() }}"
+python_package: "{{ package_name.replace(' ', '_').replace('-', '_').lower() }}"
+author_name: Waylon Walker
+author_github: waylonwalker
+description:
+_answers_file: .{{package_name}}-copier-answers.yml

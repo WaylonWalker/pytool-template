@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "coverage-rich"
+name = "{{ package_name }}"
 description = 'A rich terminal report for coveragepy.'
 readme = "README.md"
 requires-python = ">=3.7"
@@ -24,29 +24,51 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "click",
+  "rich",
+  "textual",
+  "typer",
+  "anyconfig"
 ]
 dynamic = ["version"]
 
 [project.urls]
-Documentation = "https://github.com/unknown/coverage-rich#readme"
-Issues = "https://github.com/unknown/coverage-rich/issues"
-Source = "https://github.com/unknown/coverage-rich"
+Documentation = "https://github.com/waylonwalker/{{ package_name }}#readme"
+Issues = "https://github.com/waylonwalker/{{ package_name }}/issues"
+Source = "https://github.com/waylonwalker/{{ package_name }}"
+Changelog = "https://github.com/waylonwalker/{{ package_name }}"
 
 [project.scripts]
-coverage-rich = "coverage_rich.cli:coverage_rich"
+{{ package_name }} = "{{ python_package }}.cli.app:app"
 
 [tool.hatch.version]
-path = "coverage_rich/__about__.py"
+path = "{{ python_package }}/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
+  "ipython",
+  "mypy",
+  "pyflyby",
   "pytest",
   "pytest-cov",
+  "pytest-mock",
+  "pytest-rich",
+  "ruff",
+  "black",
 ]
 [tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=coverage_rich --cov=tests {args}"
-no-cov = "cov --no-cov {args}"
+test = "coverage run -m pytest"
+cov = "coverage-rich"
+lint = "ruff {{ python_package }}"
+format = "black {{ python_package }}"
+format-check = "black --check {{ python_package }}"
+build-docs = "markata build"
+lint-test = [
+ "lint",
+ "format-check",
+ "test",
+ "cov",
+]
+test-lint = "lint-test"
 
 [[tool.hatch.envs.test.matrix]]
 python = ["37", "38", "39", "310", "311"]
@@ -55,7 +77,7 @@ python = ["37", "38", "39", "310", "311"]
 branch = true
 parallel = true
 omit = [
-  "coverage_rich/__about__.py",
+  "{{ python_package }}/__about__.py",
 ]
 
 [tool.coverage.report]
@@ -64,3 +86,11 @@ exclude_lines = [
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
 ]
+
+[tool.pytest.ini_options]
+addopts = "-ra -q --rich"
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.coverage_rich]
+fail-under=80
