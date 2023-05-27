@@ -9,4 +9,4 @@ python_package: "{{ package_name.replace(' ', '_').replace('-', '_').lower() }}"
 author_name: Waylon Walker
 author_github: waylonwalker
 description:
-_answers_file: .{{package_name}}-copier-answers.yml
+_answers_file: .{{ package_name }}-copier-answers.yml
